@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package v1;
+option go_package = "github.com/bhojpur/vim/pkg/api/v1";
+import "vim.proto";
+
+message ListNodeSpecsRequest{}
+
+message ListNodeSpecsResponse {
+    Repository repo = 1;
+    string name = 2;
+    string path = 3;
+    string description = 4;
+    repeated DesiredAnnotation arguments = 5;
+}
+
+// DesiredAnnotation describes an annotation a Node should have
+message DesiredAnnotation {
+    string name = 1;
+    bool required = 2;
+    string description = 3;
+}
+
+message IsReadOnlyRequest {}
+
+message IsReadOnlyResponse {
+    bool readonly = 1;
+}
+
+// VimUI offers services intended for the Bhojpur VIM web user interface
+service VimUI {
+    // ListNodeSpecs returns a list of Node(s) that can be started through the UI.
+    rpc ListNodeSpecs(ListNodeSpecsRequest) returns (stream ListNodeSpecsResponse) {};
+
+    // IsReadOnly returns true if the UI is readonly.
+    rpc IsReadOnly(IsReadOnlyRequest) returns (IsReadOnlyResponse) {};
+}
